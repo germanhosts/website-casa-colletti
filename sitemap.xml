@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.casa-colletti.com/</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.casa-colletti.com/" />
     <xhtml:link rel="alternate" hreflang="de" href="https://www.casa-colletti.com/de.html" />
+    <image:image><image:loc>https://www.casa-colletti.com/images/casa-colletti-on-the-hillside-above.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/the-lane-up-to-casa-colletti.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/terrace-table-with-a-view-down.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/arched-passage-from-the-dining-room.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/dining-room-and-living-room-with.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/copper-sinks-under-the-kitchen-window.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/kitchen-with-gas-stove-and-oven.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/dining-area-with-beamed-ceiling-and.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/fire-in-the-fireplace.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/bedroom-with-wooden-wardrobe.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/bunk-bed-with-linen-curtain.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/bedroom-with-two-windows-and-a.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/covered-terrace-with-table-and-benches.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/back-terrace-with-table-and-garden.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/garden-with-deck-chairs-and-stone.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/view-from-casoli-over-camaiore-to.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/hero-valley-sea.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/dining-table-with-a-bowl-of.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/evening-light-on-the-kitchen-shelf.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/fir-trees-and-the-alpi-apuane.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/hiking-path-along-an-old-stone.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/natural-pools-in-the-lombricese-valley.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/limestone-climbing-crag-near-casoli.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/evening-view-down-the-valley-to.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/climber-on-a-limestone-wall-in.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/the-pier-at-lido-di-camaiore.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/sgraffiti-carved-into-the-house-fronts.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/the-village-bar-and-alimentari-with.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/sgraffiti-portraits-along-a-lane-in.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/casoli-paese-dei-graffiti-sign-at.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/illustrated-map-of-the-sights-around.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.casa-colletti.com/images/stefanie-and-lorenzo-the-hosts-of.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://www.casa-colletti.com/de.html</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.casa-colletti.com/" />
     <xhtml:link rel="alternate" hreflang="de" href="https://www.casa-colletti.com/de.html" />
   </url>
