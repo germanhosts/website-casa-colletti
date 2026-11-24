@@ -603,6 +603,17 @@ img.zoomable{cursor:zoom-in}
 .booking .book-list{text-align:left;display:inline-block;margin:6px auto 26px;padding-left:1.1em;line-height:1.6}
 .booking .book-list li{margin-top:8px}
 .hero h1 .h1-kicker{display:block;font-family:var(--sans);font-weight:400;font-size:.78rem;line-height:1.5;letter-spacing:.32em;text-transform:uppercase;opacity:.92;margin-bottom:22px;text-shadow:none}
+.reviews{max-width:1180px;margin:0 auto;padding:110px 40px}
+.reviews .rhead{text-align:center;margin-bottom:46px}
+.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.rev-card{background:var(--paper-2);border:1px solid var(--line);border-radius:4px;padding:30px 32px;display:flex;flex-direction:column}
+.rev-card .stars{color:var(--terra);letter-spacing:4px;font-size:.78rem;margin-bottom:14px}
+.rev-card p{color:#3c372f;font-size:1rem;line-height:1.7;margin:0 0 20px}
+.rev-card .who{margin-top:auto;font-size:.82rem;color:var(--soft);letter-spacing:.03em}
+.rev-card .who strong{color:var(--ink);font-weight:600}
+.reviews .rnote{text-align:center;margin-top:36px;font-size:.86rem;color:var(--soft)}
+.reviews .rnote a{color:var(--terra)}
+@media(max-width:900px){.reviews{padding:74px 22px}.rev-grid{grid-template-columns:1fr;gap:16px}}
 </style>
 <link rel="icon" type="image/png" href="images/favicon.png" />
 </head>
@@ -621,6 +632,7 @@ img.zoomable{cursor:zoom-in}
     <a href="#beach">Beach</a>
     <a href="#village">Village</a>
     <a href="#culture">Culture</a>
+    <a href="#reviews">Reviews</a>
     <a href="#faq">FAQ</a>
     <span class="lang"><a href="index.html" class="active">EN</a><span>/</span><a href="de.html">DE</a></span>
     <a href="#book" class="btn">Book now</a>
@@ -952,6 +964,47 @@ img.zoomable{cursor:zoom-in}
     <li><strong>You’ll carry your luggage and groceries up on foot</strong>: we recommend packing a backpack rather than a large suitcase</li>
     <li>The house is not suitable for guests with limited mobility</li>
   </ul>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="rhead">
+    <div class="sec-label">Guest reviews</div>
+    <h2>What guests say.</h2>
+  </div>
+  <div class="rev-grid">
+    <div class="rev-card">
+      <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+      <p>We had a wonderful time in this special house. It sits in the middle of nature at the end of the village of Casoli, with a really lovely view of the mountains and the sea. From the front bedroom you wake up looking straight out to the sea, which is something special. The area is wonderful for hiking, and we were out almost every day.</p>
+      <div class="who"><strong>Samantha</strong> · July 2026 · Airbnb</div>
+    </div>
+    <div class="rev-card">
+      <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+      <p>Casoli is the ideal place to switch off. A trail into the Apuan Alps begins right in front of the house, and the mix of sea, mountains and the closeness to Lucca, Pisa and Florence makes it a perfect base. Cooking on the gas stove is twice the fun. Stefanie and Lorenzo are wonderful hosts. We will definitely be back!</p>
+      <div class="who"><strong>Johannes</strong> · 2026 · Google</div>
+    </div>
+    <div class="rev-card">
+      <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+      <p>We really enjoyed this stay! A beautiful, historic home in the mountains of Tuscany, with views of the coast. Even with bad weather, the house was the perfect place to relax and unwind. Stefanie was a wonderful host and went above and beyond. Would highly recommend!</p>
+      <div class="who"><strong>Miranda</strong>, New York · 2026 · Airbnb</div>
+    </div>
+    <div class="rev-card">
+      <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+      <p>A fantastic stay in a lovely home in a wonderful spot! It is perfect for climbers, and for anyone who appreciates beautiful surroundings. The hosts were welcoming and extremely kind. Warmly recommended!</p>
+      <div class="who"><strong>Vilde</strong> · October 2026 · Airbnb</div>
+    </div>
+    <div class="rev-card">
+      <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+      <p>We really enjoyed our time in Casoli. The beautiful house with its garden and view had everything you need, from kitchen utensils to tomatoes and herbs from the garden. A quiet place with friendly neighbours and trails at the door, with the beach 25 minutes away by car.</p>
+      <div class="who"><strong>Henri</strong> · September 2026 · Airbnb</div>
+    </div>
+    <div class="rev-card">
+      <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+      <p>A really beautiful house in a small village above Camaiore. Everything is cosy and furnished with great attention to detail, without feeling overdone. We especially loved the terrace with its view all the way to the sea. The village is quiet and unspoilt, and you can set off hiking straight from your door.</p>
+      <div class="who"><strong>Thomas</strong> · 2026 · Google</div>
+    </div>
+  </div>
+  <p class="rnote">More guest reviews on <a href="https://www.airbnb.de/rooms/1688939099606951713" target="_blank" rel="noopener">Airbnb</a> and <a href="https://share.google/Dw5e98mey6lZCneYt" target="_blank" rel="noopener">Google</a>.</p>
 </section>
 
 <!-- BOOKING -->
