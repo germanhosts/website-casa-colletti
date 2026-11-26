@@ -1,36 +1,44 @@
 {
-  "_hinweis": "Preise in Euro pro Nacht fuer das ganze Haus. Nur Zahlen und Daten aendern, Anfuehrungszeichen und Kommas stehen lassen.",
+  "_hinweis": "Preise in Euro pro Nacht fuer 2 Personen. Nur Zahlen und Daten aendern, Anfuehrungszeichen und Kommas stehen lassen. Daten bei Saisons: MM-TT, bei Sperren: JJJJ-MM-TT (bis = letzte gesperrte Nacht).",
 
   "standardpreis_pro_nacht": 140,
 
   "saisons": [
-    { "name": "Winter", "von": "11-13", "bis": "03-31", "preis_pro_nacht": 110 },
+    { "name": "Winter", "von": "12-01", "bis": "03-31", "preis_pro_nacht": 110 },
     { "name": "April", "von": "04-01", "bis": "04-30", "preis_pro_nacht": 120 },
-    { "name": "Sommer", "von": "07-01", "bis": "09-15", "preis_pro_nacht": 150 },
-    { "name": "Anfang November", "von": "11-01", "bis": "11-12", "preis_pro_nacht": 120 }
+    { "name": "Spaetsommer", "von": "08-01", "bis": "09-15", "preis_pro_nacht": 150 },
+    { "name": "Herbst", "von": "09-16", "bis": "10-08", "preis_pro_nacht": 130 },
+    { "name": "Spaetherbst", "von": "10-09", "bis": "11-30", "preis_pro_nacht": 120 }
   ],
 
   "gesperrt": [
-    { "von": "2026-12-19", "bis": "2027-01-02", "notiz": "Weihnachten 2026" },
-    { "von": "2027-01-29", "bis": "2027-02-06", "notiz": "Winterferien" },
-    { "von": "2027-03-20", "bis": "2027-04-03", "notiz": "Ostern" },
-    { "von": "2027-07-02", "bis": "2027-08-13", "notiz": "Sommer" },
-    { "von": "2027-10-09", "bis": "2027-10-24", "notiz": "Herbst" },
-    { "von": "2027-12-18", "bis": "2028-01-02", "notiz": "Weihnachten 2027" }
+    { "von": "2026-12-19", "bis": "2027-01-03", "notiz": "Weihnachten 2026" },
+    { "von": "2027-03-20", "bis": "2027-04-04", "notiz": "Ostern 2027" },
+    { "von": "2027-07-03", "bis": "2027-08-12", "notiz": "Sommer 2027" },
+    { "von": "2027-10-09", "bis": "2027-10-24", "notiz": "Herbst 2027" },
+    { "von": "2027-12-18", "bis": "2028-01-02", "notiz": "Weihnachten 2027" },
+    { "von": "2028-01-29", "bis": "2028-02-06", "notiz": "Winterferien 2028" },
+    { "von": "2028-04-08", "bis": "2028-04-23", "notiz": "Ostern 2028" }
   ],
 
   "inklusive_personen": 2,
   "extra_person_pro_nacht": 15,
 
   "rabatte": [
-    { "ab_naechten": 7, "prozent": 10 }
+    { "ab_naechten": 7, "prozent": 10 },
+    { "ab_naechten": 28, "prozent": 20 }
   ],
 
-  "reinigung": 100,
+  "reinigung": 80,
+  "haustier_gebuehr": 50,
   "kurtaxe_pro_person_nacht": 1.5,
   "kurtaxe_max_naechte": 7,
   "kurtaxe_frei_unter_alter": 14,
+
   "mindestaufenthalt": 3,
+  "mindestaufenthalt_zeitraeume": [
+    { "von": "08-01", "bis": "09-30", "naechte": 5 }
+  ],
   "max_gaeste": 8,
 
   "formular_url": "https://script.google.com/macros/s/AKfycbyiXH9bIHT-Qd8q1FmBRqQpIlHVGLqaHe3NVYnedPSTdcdutblfi6qrDBQnXMyfbewZPw/exec",

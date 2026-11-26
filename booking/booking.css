@@ -5,6 +5,8 @@
 .ccb-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
 .ccb-guests{display:flex;align-items:center;gap:12px;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra,#a45233)}
 .ccb-guests select{font:inherit;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--ink,#2c2823);background:var(--paper,#f7f4ed);border:1px solid var(--line,#ddd5c7);border-radius:2px;padding:8px 12px}
+.ccb-pet{cursor:pointer}
+.ccb-pet input{width:16px;height:16px;accent-color:var(--terra,#a45233)}
 .ccb-hint{font-size:.88rem;color:var(--terra-dark,#8a4329);margin:0}
 .ccb-cal{position:relative}
 .ccb-nav{position:absolute;top:-4px;left:0;right:0;display:flex;justify-content:space-between;pointer-events:none}
