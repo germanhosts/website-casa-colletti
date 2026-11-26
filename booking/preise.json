@@ -25,5 +25,6 @@
   "mindestaufenthalt": 3,
   "max_gaeste": 8,
 
+  "formular_url": "",
   "web3forms_schluessel": ""
 }

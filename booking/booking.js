@@ -288,23 +288,30 @@
         t.name + ': ' + f.name.value + '\n' + t.email + ': ' + f.email.value + '\n' +
         (f.phone.value ? 'Tel: ' + f.phone.value + '\n' : '') +
         (f.message.value ? '\n' + f.message.value + '\n' : '') + '\n(' + lang.toUpperCase() + ', casa-colletti.com)';
+      var gurl = state.cfg.formular_url;
       var key = state.cfg.web3forms_schluessel;
       var subject = t.subject + ' ' + state.checkIn + ' / ' + q.nights + ' ' + t.nights;
 
-      if (!key) { // fallback: open the guest's mail program
+      if (!gurl && !key) { // fallback: open the guest's mail program
         window.location.href = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
         return;
       }
       var btn = form.querySelector('button[type=submit]');
       btn.disabled = true; btn.textContent = t.sending;
-      fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          access_key: key, subject: subject, from_name: 'Casa Colletti Website',
-          name: f.name.value, email: f.email.value, replyto: f.email.value, message: text
-        })
-      }).then(function (r) { return r.json(); }).then(function (j) {
+      var req = gurl
+        ? fetch(gurl, { // Google Apps Script; text/plain avoids a CORS preflight
+            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ subject: subject, name: f.name.value, email: f.email.value, message: text, botcheck: false })
+          })
+        : fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              access_key: key, subject: subject, from_name: 'Casa Colletti Website',
+              name: f.name.value, email: f.email.value, replyto: f.email.value, message: text
+            })
+          });
+      req.then(function (r) { return r.json(); }).then(function (j) {
         if (!j.success) throw 0;
         form.innerHTML = '<p class="ccb-thanks">' + t.thanks + '</p>';
       }).catch(function () {
