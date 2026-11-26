@@ -616,6 +616,7 @@ img.zoomable{cursor:zoom-in}
 @media(max-width:900px){.reviews{padding:74px 22px}.rev-grid{grid-template-columns:1fr;gap:16px}}
 </style>
 <link rel="icon" type="image/png" href="images/favicon.png" />
+<link rel="stylesheet" href="booking/booking.css">
 </head>
 <body>
 
@@ -1018,8 +1019,8 @@ img.zoomable{cursor:zoom-in}
     <li><strong>Book directly with us or through Airbnb</strong></li>
     <li><strong>Tell us your dates and group size</strong>: we’d love to hear from you</li>
   </ul>
+  <div id="cc-booking" data-lang="en"></div>
   <div class="cta">
-    <a href="mailto:colletti.casoli@gmail.com?subject=Casa%20Colletti%20enquiry" class="btn primary">Check availability</a>
     <a href="https://www.airbnb.de/rooms/1688939099606951713" target="_blank" rel="noopener" class="btn ghost">Book on Airbnb</a>
   </div>
   <p class="pricing">Minimum stay 3 nights. We usually reply within a day.</p>
@@ -1085,5 +1086,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList
     menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
   }
 </script>
+<script src="booking/booking.js"></script>
 </body>
 </html>
