@@ -34,6 +34,7 @@
 .ccb-table{width:100%;border-collapse:collapse;font-size:.95rem}
 .ccb-table td{padding:6px 0;border-bottom:1px solid var(--paper-2,#efe9dd)}
 .ccb-table td:last-child{text-align:right}
+.ccb-disc td{color:var(--green,#4d5a44)}
 .ccb-total td{border-bottom:0;padding-top:12px;font-weight:600;font-size:1.05rem}
 .ccb-small{font-size:.8rem;color:var(--soft,#6b6358);margin:10px 0}
 .ccb-reset{background:none;border:0;padding:0;font:inherit;font-size:.8rem;color:var(--soft,#6b6358);text-decoration:underline;cursor:pointer}

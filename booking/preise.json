@@ -4,12 +4,10 @@
   "standardpreis_pro_nacht": 140,
 
   "saisons": [
-    {
-      "name": "Hochsaison",
-      "von": "06-15",
-      "bis": "09-15",
-      "preis_nach_personen": { "2": 160, "4": 190, "6": 220, "8": 250 }
-    }
+    { "name": "Winter", "von": "11-13", "bis": "03-31", "preis_pro_nacht": 110 },
+    { "name": "April", "von": "04-01", "bis": "04-30", "preis_pro_nacht": 120 },
+    { "name": "Sommer", "von": "07-01", "bis": "09-15", "preis_pro_nacht": 150 },
+    { "name": "Anfang November", "von": "11-01", "bis": "11-12", "preis_pro_nacht": 120 }
   ],
 
   "gesperrt": [
@@ -19,6 +17,13 @@
     { "von": "2027-07-02", "bis": "2027-08-13", "notiz": "Sommer" },
     { "von": "2027-10-09", "bis": "2027-10-24", "notiz": "Herbst" },
     { "von": "2027-12-18", "bis": "2028-01-02", "notiz": "Weihnachten 2027" }
+  ],
+
+  "inklusive_personen": 2,
+  "extra_person_pro_nacht": 15,
+
+  "rabatte": [
+    { "ab_naechten": 7, "prozent": 10 }
   ],
 
   "reinigung": 100,

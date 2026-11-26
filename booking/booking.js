@@ -13,7 +13,7 @@
       nights: 'nights', night: 'night', cleaning: 'Final cleaning', total: 'Total',
       minStay: function (n) { return 'Minimum stay is ' + n + ' nights.'; },
       notFree: 'Some nights in this period are already booked. Please choose other dates.',
-      taxNote: 'All prices include the tourist tax of the Comune di Camaiore.', tax: 'Tourist tax',
+      taxNote: 'All prices include the tourist tax of the Comune di Camaiore.', tax: 'Tourist tax', extra: 'Additional guests', discount: function (p) { return 'Long-stay discount ' + p + '%'; },
       noObligation: 'This is a request, not a binding booking. We confirm availability and send payment details within a day.',
       name: 'Name', email: 'Email', phone: 'Phone (optional)', message: 'Message (optional)',
       send: 'Send booking request', sending: 'Sending…', reset: 'Clear dates',
@@ -34,7 +34,7 @@
       nights: 'Nächte', night: 'Nacht', cleaning: 'Endreinigung', total: 'Gesamt',
       minStay: function (n) { return 'Der Mindestaufenthalt beträgt ' + n + ' Nächte.'; },
       notFree: 'In diesem Zeitraum sind schon Nächte belegt. Bitte wähle andere Daten.',
-      taxNote: 'Alle Preise inklusive Kurtaxe der Gemeinde Camaiore.', tax: 'Kurtaxe',
+      taxNote: 'Alle Preise inklusive Kurtaxe der Gemeinde Camaiore.', tax: 'Kurtaxe', extra: 'Weitere Gäste', discount: function (p) { return 'Rabatt für längeren Aufenthalt ' + p + ' %'; },
       noObligation: 'Das ist eine Anfrage, noch keine verbindliche Buchung. Wir bestätigen die Verfügbarkeit und schicken dir innerhalb eines Tages die Zahlungsdaten.',
       name: 'Name', email: 'E-Mail', phone: 'Telefon (optional)', message: 'Nachricht (optional)',
       send: 'Buchungsanfrage senden', sending: 'Wird gesendet…', reset: 'Daten löschen',
@@ -84,6 +84,11 @@
       var p = priceForNight(addDays(checkIn, i), guests, cfg);
       sum += p; lines[p] = (lines[p] || 0) + 1;
     }
+    var extraPersons = Math.max(0, guests - (cfg.inklusive_personen || guests));
+    var extra = extraPersons * (cfg.extra_person_pro_nacht || 0) * n;
+    var discPct = 0;
+    (cfg.rabatte || []).forEach(function (r) { if (n >= r.ab_naechten && r.prozent > discPct) discPct = r.prozent; });
+    var discount = Math.round((sum + extra) * discPct) / 100;
     var cleaning = cfg.reinigung || 0;
     var taxNights = cfg.kurtaxe_max_naechte ? Math.min(n, cfg.kurtaxe_max_naechte) : n;
     var taxRate = cfg.kurtaxe_pro_person_nacht || 0;
@@ -93,8 +98,8 @@
       nights: n,
       lines: Object.keys(lines).map(Number).sort(function (a, b) { return a - b; })
         .map(function (p) { return { price: p, count: lines[p] }; }),
-      accommodation: sum, cleaning: cleaning, tax: tax, taxRate: taxRate, taxNights: taxNights, taxPersons: taxPersons,
-      total: sum + cleaning + tax
+      accommodation: sum, cleaning: cleaning, extra: extra, discount: discount, discPct: discPct, extraPersons: extraPersons, extraRate: cfg.extra_person_pro_nacht || 0, tax: tax, taxRate: taxRate, taxNights: taxNights, taxPersons: taxPersons,
+      total: sum + extra - discount + cleaning + tax
     };
   }
   function rangeFree(checkIn, checkOut, booked) {
@@ -288,6 +293,8 @@
         '<span>' + t.departure + '<strong>' + fmtDate(state.checkOut) + '</strong></span>' +
         '<span>' + t.guests + '<strong>' + state.guests + (state.kids ? ' (' + t.kids(state.cfg.kurtaxe_frei_unter_alter) + ': ' + state.kids + ')' : '') + '</strong></span></p>' +
         '<table class="ccb-table">' + rows +
+        (q.extra ? '<tr><td>' + t.extra + ' (' + q.extraPersons + ' × ' + fmt.format(q.extraRate) + ' × ' + q.nights + ')</td><td>' + fmt.format(q.extra) + '</td></tr>' : '') +
+        (q.discount ? '<tr class="ccb-disc"><td>' + t.discount(q.discPct) + '</td><td>&minus;' + fmt2.format(q.discount) + '</td></tr>' : '') +
         (q.cleaning ? '<tr><td>' + t.cleaning + '</td><td>' + fmt.format(q.cleaning) + '</td></tr>' : '') +
         (q.tax ? '<tr><td>' + t.tax + ' (' + fmt2.format(q.taxRate) + ' × ' + q.taxPersons + ' × ' + q.taxNights + ')</td><td>' + fmt2.format(q.tax) + '</td></tr>' : '') +
         '<tr class="ccb-total"><td>' + t.total + '</td><td>' + (q.total % 1 ? fmt2 : fmt).format(q.total) + '</td></tr></table>' +
@@ -307,7 +314,7 @@
         t.arrival + ': ' + state.checkIn + '\n' + t.departure + ': ' + state.checkOut + '\n' +
         t.nights + ': ' + q.nights + '\n' + t.guests + ': ' + state.guests + (state.kids ? ' (' + t.kids(state.cfg.kurtaxe_frei_unter_alter) + ': ' + state.kids + ')' : '') + '\n' +
         q.lines.map(function (l) { return l.count + ' x ' + l.price + ' EUR'; }).join('\n') + '\n' +
-        t.cleaning + ': ' + q.cleaning + ' EUR\n' + (q.tax ? t.tax + ': ' + q.tax.toFixed(2) + ' EUR (' + q.taxRate + ' x ' + q.taxPersons + ' x ' + q.taxNights + ')\n' : '') + t.total + ': ' + q.total + ' EUR\n\n' +
+        (q.extra ? t.extra + ': ' + q.extra + ' EUR\n' : '') + (q.discount ? t.discount(q.discPct) + ': -' + q.discount.toFixed(2) + ' EUR\n' : '') + t.cleaning + ': ' + q.cleaning + ' EUR\n' + (q.tax ? t.tax + ': ' + q.tax.toFixed(2) + ' EUR (' + q.taxRate + ' x ' + q.taxPersons + ' x ' + q.taxNights + ')\n' : '') + t.total + ': ' + q.total + ' EUR\n\n' +
         t.name + ': ' + f.name.value + '\n' + t.email + ': ' + f.email.value + '\n' +
         (f.phone.value ? 'Tel: ' + f.phone.value + '\n' : '') +
         (f.message.value ? '\n' + f.message.value + '\n' : '') + '\n(' + lang.toUpperCase() + ', casa-colletti.com)';
