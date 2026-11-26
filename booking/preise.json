@@ -23,7 +23,8 @@
 
   "reinigung": 100,
   "kurtaxe_pro_person_nacht": 1.5,
-  "kurtaxe_max_naechte": null,
+  "kurtaxe_max_naechte": 7,
+  "kurtaxe_frei_unter_alter": 14,
   "mindestaufenthalt": 3,
   "max_gaeste": 8,
 

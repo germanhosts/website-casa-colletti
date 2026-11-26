@@ -8,7 +8,7 @@
     en: {
       months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
       days: ['Mo','Tu','We','Th','Fr','Sa','Su'],
-      guests: 'Guests', guest1: 'guest', guestN: 'guests',
+      guests: 'Guests', guest1: 'guest', guestN: 'guests', kids: function (a) { return 'of which children under ' + a; },
       pickIn: 'Choose your arrival date', pickOut: 'Now choose your departure date',
       nights: 'nights', night: 'night', cleaning: 'Final cleaning', total: 'Total',
       minStay: function (n) { return 'Minimum stay is ' + n + ' nights.'; },
@@ -29,7 +29,7 @@
     de: {
       months: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
       days: ['Mo','Di','Mi','Do','Fr','Sa','So'],
-      guests: 'Gäste', guest1: 'Gast', guestN: 'Gäste',
+      guests: 'Gäste', guest1: 'Gast', guestN: 'Gäste', kids: function (a) { return 'davon Kinder unter ' + a; },
       pickIn: 'Wähle deinen Anreisetag', pickOut: 'Jetzt den Abreisetag wählen',
       nights: 'Nächte', night: 'Nacht', cleaning: 'Endreinigung', total: 'Gesamt',
       minStay: function (n) { return 'Der Mindestaufenthalt beträgt ' + n + ' Nächte.'; },
@@ -78,7 +78,7 @@
     }
     return cfg.standardpreis_pro_nacht;
   }
-  function quote(checkIn, checkOut, guests, cfg) {
+  function quote(checkIn, checkOut, guests, cfg, kids) {
     var n = nightsBetween(checkIn, checkOut), lines = {}, sum = 0;
     for (var i = 0; i < n; i++) {
       var p = priceForNight(addDays(checkIn, i), guests, cfg);
@@ -87,12 +87,13 @@
     var cleaning = cfg.reinigung || 0;
     var taxNights = cfg.kurtaxe_max_naechte ? Math.min(n, cfg.kurtaxe_max_naechte) : n;
     var taxRate = cfg.kurtaxe_pro_person_nacht || 0;
-    var tax = Math.round(taxRate * guests * taxNights * 100) / 100;
+    var taxPersons = Math.max(0, guests - (kids || 0));
+    var tax = Math.round(taxRate * taxPersons * taxNights * 100) / 100;
     return {
       nights: n,
       lines: Object.keys(lines).map(Number).sort(function (a, b) { return a - b; })
         .map(function (p) { return { price: p, count: lines[p] }; }),
-      accommodation: sum, cleaning: cleaning, tax: tax, taxRate: taxRate, taxNights: taxNights,
+      accommodation: sum, cleaning: cleaning, tax: tax, taxRate: taxRate, taxNights: taxNights, taxPersons: taxPersons,
       total: sum + cleaning + tax
     };
   }
@@ -123,7 +124,7 @@
     var fmt2 = new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-GB', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 });
     var fmtDate = function (s) { return parse(s).toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); };
 
-    var state = { cfg: null, booked: {}, checkIn: null, checkOut: null, guests: 2, view: null, today: iso(new Date()) };
+    var state = { cfg: null, booked: {}, checkIn: null, checkOut: null, guests: 2, kids: 0, view: null, today: iso(new Date()) };
     root.innerHTML = '<p class="ccb-msg">' + t.loading + '</p>';
 
     var bust = '?v=' + Date.now();
@@ -157,9 +158,25 @@
         if (g === state.guests) o.selected = true;
         guestSel.appendChild(o);
       }
-      guestSel.addEventListener('change', function () { state.guests = +guestSel.value; renderSummary(); });
       gl.appendChild(guestSel);
       top.appendChild(gl);
+      var kidAge = state.cfg.kurtaxe_frei_unter_alter;
+      var kidSel = null;
+      if (kidAge) {
+        var kl = el('label', { 'class': 'ccb-guests' }, '<span>' + t.kids(kidAge) + '</span>');
+        kidSel = el('select', { 'aria-label': t.kids(kidAge) });
+        kl.appendChild(kidSel);
+        top.appendChild(kl);
+      }
+      function fillKids() {
+        if (!kidSel) return;
+        if (state.kids > state.guests) state.kids = state.guests;
+        kidSel.innerHTML = '';
+        for (var k = 0; k <= state.guests; k++) { var ko = el('option', { value: k }, String(k)); if (k === state.kids) ko.selected = true; kidSel.appendChild(ko); }
+      }
+      fillKids();
+      if (kidSel) kidSel.addEventListener('change', function () { state.kids = +kidSel.value; renderSummary(); });
+      guestSel.addEventListener('change', function () { state.guests = +guestSel.value; fillKids(); renderSummary(); });
       hint = el('p', { 'class': 'ccb-hint', 'aria-live': 'polite' });
       top.appendChild(hint);
       wrap.appendChild(top);
@@ -262,17 +279,17 @@
         summary.innerHTML = '<p class="ccb-prompt">' + t.arrival + ': <strong>' + fmtDate(state.checkIn) + '</strong><br>' + t.pickOut + '</p>';
         form.style.display = 'none'; return;
       }
-      var q = quote(state.checkIn, state.checkOut, state.guests, state.cfg);
+      var q = quote(state.checkIn, state.checkOut, state.guests, state.cfg, state.kids);
       var rows = q.lines.map(function (l) {
         return '<tr><td>' + l.count + ' ' + (l.count === 1 ? t.night : t.nights) + ' × ' + fmt.format(l.price) + '</td><td>' + fmt.format(l.price * l.count) + '</td></tr>';
       }).join('');
       summary.innerHTML =
         '<p class="ccb-dates"><span>' + t.arrival + '<strong>' + fmtDate(state.checkIn) + '</strong></span>' +
         '<span>' + t.departure + '<strong>' + fmtDate(state.checkOut) + '</strong></span>' +
-        '<span>' + t.guests + '<strong>' + state.guests + '</strong></span></p>' +
+        '<span>' + t.guests + '<strong>' + state.guests + (state.kids ? ' (' + t.kids(state.cfg.kurtaxe_frei_unter_alter) + ': ' + state.kids + ')' : '') + '</strong></span></p>' +
         '<table class="ccb-table">' + rows +
         (q.cleaning ? '<tr><td>' + t.cleaning + '</td><td>' + fmt.format(q.cleaning) + '</td></tr>' : '') +
-        (q.tax ? '<tr><td>' + t.tax + ' (' + fmt2.format(q.taxRate) + ' × ' + state.guests + ' × ' + q.taxNights + ')</td><td>' + fmt2.format(q.tax) + '</td></tr>' : '') +
+        (q.tax ? '<tr><td>' + t.tax + ' (' + fmt2.format(q.taxRate) + ' × ' + q.taxPersons + ' × ' + q.taxNights + ')</td><td>' + fmt2.format(q.tax) + '</td></tr>' : '') +
         '<tr class="ccb-total"><td>' + t.total + '</td><td>' + (q.total % 1 ? fmt2 : fmt).format(q.total) + '</td></tr></table>' +
         '<p class="ccb-small">' + t.taxNote + '</p>' +
         '<button type="button" class="ccb-reset">' + t.reset + '</button>';
@@ -285,12 +302,12 @@
       var f = form.elements;
       if (!f.name.value.trim() || !f.email.checkValidity() || !f.email.value) { form.reportValidity && form.reportValidity(); return; }
       if (f.botcheck.checked) return;
-      var q = quote(state.checkIn, state.checkOut, state.guests, state.cfg);
+      var q = quote(state.checkIn, state.checkOut, state.guests, state.cfg, state.kids);
       var text =
         t.arrival + ': ' + state.checkIn + '\n' + t.departure + ': ' + state.checkOut + '\n' +
-        t.nights + ': ' + q.nights + '\n' + t.guests + ': ' + state.guests + '\n' +
+        t.nights + ': ' + q.nights + '\n' + t.guests + ': ' + state.guests + (state.kids ? ' (' + t.kids(state.cfg.kurtaxe_frei_unter_alter) + ': ' + state.kids + ')' : '') + '\n' +
         q.lines.map(function (l) { return l.count + ' x ' + l.price + ' EUR'; }).join('\n') + '\n' +
-        t.cleaning + ': ' + q.cleaning + ' EUR\n' + (q.tax ? t.tax + ': ' + q.tax.toFixed(2) + ' EUR (' + q.taxRate + ' x ' + state.guests + ' x ' + q.taxNights + ')\n' : '') + t.total + ': ' + q.total + ' EUR\n\n' +
+        t.cleaning + ': ' + q.cleaning + ' EUR\n' + (q.tax ? t.tax + ': ' + q.tax.toFixed(2) + ' EUR (' + q.taxRate + ' x ' + q.taxPersons + ' x ' + q.taxNights + ')\n' : '') + t.total + ': ' + q.total + ' EUR\n\n' +
         t.name + ': ' + f.name.value + '\n' + t.email + ': ' + f.email.value + '\n' +
         (f.phone.value ? 'Tel: ' + f.phone.value + '\n' : '') +
         (f.message.value ? '\n' + f.message.value + '\n' : '') + '\n(' + lang.toUpperCase() + ', casa-colletti.com)';
