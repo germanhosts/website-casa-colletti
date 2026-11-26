@@ -128,6 +128,9 @@
     ]).then(function (res) {
       state.cfg = res[0];
       (res[1].booked || []).forEach(function (d) { state.booked[d] = true; });
+      (state.cfg.gesperrt || []).forEach(function (g) { // own blocked periods, 'bis' = last blocked night
+        if (g.von && g.bis) for (var d = g.von; d <= g.bis; d = addDays(d, 1)) state.booked[d] = true;
+      });
       state.updated = res[1].updated;
       var now = new Date(); state.view = new Date(now.getFullYear(), now.getMonth(), 1);
       build();
