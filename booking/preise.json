@@ -1,0 +1,20 @@
+{
+  "_hinweis": "Preise in Euro pro Nacht fuer das ganze Haus. Nur Zahlen und Daten aendern, Anfuehrungszeichen und Kommas stehen lassen.",
+
+  "standardpreis_pro_nacht": 140,
+
+  "saisons": [
+    {
+      "name": "Hochsaison",
+      "von": "06-15",
+      "bis": "09-15",
+      "preis_nach_personen": { "2": 160, "4": 190, "6": 220, "8": 250 }
+    }
+  ],
+
+  "reinigung": 100,
+  "mindestaufenthalt": 3,
+  "max_gaeste": 8,
+
+  "web3forms_schluessel": ""
+}
