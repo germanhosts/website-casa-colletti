@@ -10,7 +10,7 @@
       days: ['Mo','Tu','We','Th','Fr','Sa','Su'],
       guests: 'Guests', guest1: 'guest', guestN: 'guests', kids: function (a) { return 'of which children under ' + a; },
       pickIn: 'Choose your arrival date', pickOut: 'Now choose your departure date',
-      nights: 'nights', night: 'night', cleaning: 'Final cleaning', total: 'Total', pp: 'per person per night',
+      nights: 'nights', night: 'night', cleaning: 'Final cleaning', total: 'Total', pp: 'per person per night', rev: function (p) { return 'Well-reviewed guest discount ' + p + '%'; }, revNote: 'Got good guest reviews on Airbnb? Send us a screenshot of your profile after your enquiry and we\'ll take the discount off.', revRow: function (p) { return 'Well-reviewed guest discount ' + p + '% (after review)'; }, revMail: 'screenshot of Airbnb reviews to follow',
       minStay: function (n) { return 'Minimum stay is ' + n + ' nights.'; },
       notFree: 'Some nights in this period are already booked. Please choose other dates.',
       taxNote: 'No hidden costs. Your price includes bed linen and towels, shower gel, shampoo and soap, final cleaning, tourist tax, heating, electricity and water, Wi-Fi, a basket of firewood for the fireplace and kitchen basics.', tax: 'Tourist tax', pet: 'With pet', petFee: 'Pet fee', extra: 'Additional guests', discount: function (p) { return 'Long-stay discount ' + p + '%'; },
@@ -31,7 +31,7 @@
       days: ['Mo','Di','Mi','Do','Fr','Sa','So'],
       guests: 'Gäste', guest1: 'Gast', guestN: 'Gäste', kids: function (a) { return 'davon Kinder unter ' + a; },
       pickIn: 'Wähle deinen Anreisetag', pickOut: 'Jetzt den Abreisetag wählen',
-      nights: 'Nächte', night: 'Nacht', cleaning: 'Endreinigung', total: 'Gesamt', pp: 'pro Person und Nacht',
+      nights: 'Nächte', night: 'Nacht', cleaning: 'Endreinigung', total: 'Gesamt', pp: 'pro Person und Nacht', rev: function (p) { return 'Rabatt für gut bewertete Gäste ' + p + ' %'; }, revNote: 'Du hast gute Bewertungen als Gast auf Airbnb? Schick uns nach deiner Anfrage einen Screenshot deines Profils, dann ziehen wir den Rabatt ab.', revRow: function (p) { return 'Rabatt für gut bewertete Gäste ' + p + ' % (nach Prüfung)'; }, revMail: 'Screenshot der Airbnb-Bewertungen folgt',
       minStay: function (n) { return 'Der Mindestaufenthalt beträgt ' + n + ' Nächte.'; },
       notFree: 'In diesem Zeitraum sind schon Nächte belegt. Bitte wähle andere Daten.',
       taxNote: 'Keine versteckten Kosten. Im Preis enthalten: Bettwäsche und Handtücher, Duschgel, Shampoo und Seife, Endreinigung, Kurtaxe, Heizung, Strom und Wasser, WLAN, ein Korb Feuerholz für den Kamin und eine Grundausstattung für die Küche.', tax: 'Kurtaxe', pet: 'Mit Haustier', petFee: 'Haustiergebühr', extra: 'Weitere Gäste', discount: function (p) { return 'Rabatt für längeren Aufenthalt ' + p + ' %'; },
@@ -78,7 +78,7 @@
     }
     return cfg.standardpreis_pro_nacht;
   }
-  function quote(checkIn, checkOut, guests, cfg, kids, pet) {
+  function quote(checkIn, checkOut, guests, cfg, kids, pet, rev) {
     var n = nightsBetween(checkIn, checkOut), lines = {}, sum = 0;
     for (var i = 0; i < n; i++) {
       var p = priceForNight(addDays(checkIn, i), guests, cfg);
@@ -89,6 +89,8 @@
     var discPct = 0;
     (cfg.rabatte || []).forEach(function (r) { if (n >= r.ab_naechten && r.prozent > discPct) discPct = r.prozent; });
     var discount = Math.round((sum + extra) * discPct) / 100;
+    var revPct = rev ? (cfg.bewertungsrabatt_prozent || 0) : 0;
+    var revDisc = Math.round((sum + extra - discount) * revPct) / 100;
     var cleaning = cfg.reinigung || 0;
     var petFee = pet ? (cfg.haustier_gebuehr || 0) : 0;
     var taxNights = cfg.kurtaxe_max_naechte ? Math.min(n, cfg.kurtaxe_max_naechte) : n;
@@ -99,8 +101,8 @@
       nights: n,
       lines: Object.keys(lines).map(Number).sort(function (a, b) { return a - b; })
         .map(function (p) { return { price: p, count: lines[p] }; }),
-      accommodation: sum, cleaning: cleaning, extra: extra, petFee: petFee, discount: discount, discPct: discPct, extraPersons: extraPersons, extraRate: cfg.extra_person_pro_nacht || 0, tax: tax, taxRate: taxRate, taxNights: taxNights, taxPersons: taxPersons,
-      total: sum + extra - discount + cleaning + petFee + tax
+      revDisc: revDisc, revPct: revPct, accommodation: sum, cleaning: cleaning, extra: extra, petFee: petFee, discount: discount, discPct: discPct, extraPersons: extraPersons, extraRate: cfg.extra_person_pro_nacht || 0, tax: tax, taxRate: taxRate, taxNights: taxNights, taxPersons: taxPersons,
+      total: sum + extra - discount - revDisc + cleaning + petFee + tax
     };
   }
   function minStay(checkIn, cfg) {
@@ -135,7 +137,7 @@
     var fmt2 = new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-GB', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 });
     var fmtDate = function (s) { return parse(s).toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); };
 
-    var state = { cfg: null, booked: {}, checkIn: null, checkOut: null, guests: 2, kids: 0, pet: false, view: null, today: iso(new Date()) };
+    var state = { cfg: null, booked: {}, checkIn: null, checkOut: null, guests: 2, kids: 0, pet: false, rev: false, view: null, today: iso(new Date()) };
     root.innerHTML = '<p class="ccb-msg">' + t.loading + '</p>';
 
     var bust = '?v=' + Date.now();
@@ -192,6 +194,11 @@
         var pl = el('label', { 'class': 'ccb-guests ccb-pet' }, '<input type="checkbox"><span>' + t.pet + '</span>');
         pl.querySelector('input').addEventListener('change', function (e) { state.pet = e.target.checked; renderSummary(); });
         top.appendChild(pl);
+      }
+      if (state.cfg.bewertungsrabatt_prozent) {
+        var rl = el('label', { 'class': 'ccb-guests ccb-pet ccb-rev' }, '<input type="checkbox"><span>' + t.rev(state.cfg.bewertungsrabatt_prozent) + '<small style="display:block;text-transform:none;letter-spacing:0;font-size:.8rem;line-height:1.4;color:var(--soft,#6b6358);margin-top:4px">' + t.revNote + '</small></span>');
+        rl.querySelector('input').addEventListener('change', function (e) { state.rev = e.target.checked; renderSummary(); });
+        top.appendChild(rl);
       }
       hint = el('p', { 'class': 'ccb-hint', 'aria-live': 'polite' });
       top.appendChild(hint);
@@ -294,7 +301,7 @@
         summary.innerHTML = '<p class="ccb-prompt">' + t.arrival + ': <strong>' + fmtDate(state.checkIn) + '</strong><br>' + t.pickOut + '</p>';
         form.style.display = 'none'; return;
       }
-      var q = quote(state.checkIn, state.checkOut, state.guests, state.cfg, state.kids, state.pet);
+      var q = quote(state.checkIn, state.checkOut, state.guests, state.cfg, state.kids, state.pet, state.rev);
       var rows = q.lines.map(function (l) {
         return '<tr><td>' + l.count + ' ' + (l.count === 1 ? t.night : t.nights) + ' × ' + fmt.format(l.price) + '</td><td>' + fmt.format(l.price * l.count) + '</td></tr>';
       }).join('');
@@ -305,6 +312,7 @@
         '<table class="ccb-table">' + rows +
         (q.extra ? '<tr><td>' + t.extra + ' (' + q.extraPersons + ' × ' + fmt.format(q.extraRate) + ' × ' + q.nights + ')</td><td>' + fmt.format(q.extra) + '</td></tr>' : '') +
         (q.discount ? '<tr class="ccb-disc"><td>' + t.discount(q.discPct) + '</td><td>&minus;' + fmt2.format(q.discount) + '</td></tr>' : '') +
+        (q.revDisc ? '<tr class="ccb-disc"><td>' + t.revRow(q.revPct) + '</td><td>&minus;' + fmt2.format(q.revDisc) + '</td></tr>' : '') +
         (q.petFee ? '<tr><td>' + t.petFee + '</td><td>' + fmt.format(q.petFee) + '</td></tr>' : '') +
         (q.cleaning ? '<tr><td>' + t.cleaning + '</td><td>' + fmt.format(q.cleaning) + '</td></tr>' : '') +
         (q.tax ? '<tr><td>' + t.tax + ' (' + fmt2.format(q.taxRate) + ' × ' + q.taxPersons + ' × ' + q.taxNights + ')</td><td>' + fmt2.format(q.tax) + '</td></tr>' : '') +
@@ -321,12 +329,12 @@
       var f = form.elements;
       if (!f.name.value.trim() || !f.email.checkValidity() || !f.email.value) { form.reportValidity && form.reportValidity(); return; }
       if (f.botcheck.checked) return;
-      var q = quote(state.checkIn, state.checkOut, state.guests, state.cfg, state.kids, state.pet);
+      var q = quote(state.checkIn, state.checkOut, state.guests, state.cfg, state.kids, state.pet, state.rev);
       var text =
         t.arrival + ': ' + state.checkIn + '\n' + t.departure + ': ' + state.checkOut + '\n' +
         t.nights + ': ' + q.nights + '\n' + t.guests + ': ' + state.guests + (state.kids ? ' (' + t.kids(state.cfg.kurtaxe_frei_unter_alter) + ': ' + state.kids + ')' : '') + '\n' +
         q.lines.map(function (l) { return l.count + ' x ' + l.price + ' EUR'; }).join('\n') + '\n' +
-        (q.extra ? t.extra + ': ' + q.extra + ' EUR\n' : '') + (q.discount ? t.discount(q.discPct) + ': -' + q.discount.toFixed(2) + ' EUR\n' : '') + (q.petFee ? t.petFee + ': ' + q.petFee + ' EUR\n' : '') + t.cleaning + ': ' + q.cleaning + ' EUR\n' + (q.tax ? t.tax + ': ' + q.tax.toFixed(2) + ' EUR (' + q.taxRate + ' x ' + q.taxPersons + ' x ' + q.taxNights + ')\n' : '') + t.total + ': ' + q.total + ' EUR\n\n' +
+        (q.extra ? t.extra + ': ' + q.extra + ' EUR\n' : '') + (q.discount ? t.discount(q.discPct) + ': -' + q.discount.toFixed(2) + ' EUR\n' : '') + (q.revDisc ? t.revRow(q.revPct) + ': -' + q.revDisc.toFixed(2) + ' EUR (' + t.revMail + ')\n' : '') + (q.petFee ? t.petFee + ': ' + q.petFee + ' EUR\n' : '') + t.cleaning + ': ' + q.cleaning + ' EUR\n' + (q.tax ? t.tax + ': ' + q.tax.toFixed(2) + ' EUR (' + q.taxRate + ' x ' + q.taxPersons + ' x ' + q.taxNights + ')\n' : '') + t.total + ': ' + q.total + ' EUR\n\n' +
         t.name + ': ' + f.name.value + '\n' + t.email + ': ' + f.email.value + '\n' +
         (f.phone.value ? 'Tel: ' + f.phone.value + '\n' : '') +
         (f.message.value ? '\n' + f.message.value + '\n' : '') + '\n(' + lang.toUpperCase() + ', casa-colletti.com)';
