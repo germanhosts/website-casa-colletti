@@ -31,7 +31,7 @@
 
   "reinigung": 80,
   "haustier_gebuehr": 50,
-  "bewertungsrabatt_prozent": 5,
+  "bewertungsrabatt_prozent": 0,
   "kurtaxe_pro_person_nacht": 1.5,
   "kurtaxe_max_naechte": 7,
   "kurtaxe_frei_unter_alter": 14,
